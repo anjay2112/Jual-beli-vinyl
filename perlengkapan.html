@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perlengkapan Pemutar Vinyl — Vinyl Hilmi</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --cream:#F5EFE6; --cream-soft:#FBF7F0; --brown-deep:#3E2C23;
+            --brown-warm:#6B4A36; --terracotta:#C96A4B; --terracotta-d:#A4512F;
+            --mustard:#D9A441; --olive:#7A8450; --border:#E4D8C7; --text-muted:#7A6A5D;
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family:'Inter',sans-serif; background:var(--cream); color:var(--brown-deep); line-height:1.6; padding:20px; }
+        h1,h2,h3 { font-family:'DM Serif Display',serif; font-weight:400; }
+
+        .banner {
+            background: linear-gradient(135deg, #D9A441 0%, #C96A4B 100%);
+            color: #fff; padding: 32px 28px; border-radius: 16px;
+            margin-bottom: 26px;
+            position:relative; overflow:hidden;
+        }
+        .banner::after {
+            content:"🎧"; position:absolute; right:24px; top:50%;
+            font-size: 90px; transform: translateY(-50%); opacity:0.3;
+        }
+        .banner h1 { font-size: 2rem; margin-bottom: 6px; }
+        .banner p { max-width: 600px; font-size: 14px; }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+        }
+        .card {
+            background: var(--cream-soft);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            overflow: hidden;
+            display: flex; flex-direction: column;
+            transition: 0.3s;
+            animation: fadeUp 0.5s ease-out backwards;
+        }
+        .card:hover { transform: translateY(-6px); box-shadow: 0 14px 30px rgba(62,44,35,0.15); }
+        @keyframes fadeUp { from { opacity:0; transform:translateY(14px);} to {opacity:1;transform:none;} }
+
+        .card-img { display:block; aspect-ratio:1/1; overflow:hidden; background:#eee; position:relative; }
+        .card-img img { width:100%; height:100%; object-fit:cover; transition:transform 0.5s; }
+        .card:hover .card-img img { transform: scale(1.07); }
+        .card-img .overlay {
+            position:absolute; inset:0; background: rgba(62,44,35,0.55);
+            display:flex; align-items:center; justify-content:center;
+            color:#fff; font-weight:600; font-size:13px;
+            opacity:0; transition:0.3s;
+        }
+        .card:hover .card-img .overlay { opacity:1; }
+
+        .card-body { padding: 14px 16px; flex:1; display:flex; flex-direction:column; }
+        .card-body h3 { font-size: 1rem; margin-bottom: 4px; }
+        .card-body .desc { font-size:12px; color: var(--text-muted); margin-bottom:8px; }
+        .price { color: var(--terracotta); font-weight: 700; font-size: 1.05rem; margin-bottom: 10px; margin-top:auto; }
+        .btn-wa {
+            display: block; text-align: center;
+            background: #25D366; color: #fff;
+            padding: 9px; border-radius: 8px; text-decoration: none;
+            font-size: 13px; font-weight: 600; transition: 0.25s;
+        }
+        .btn-wa:hover { background: #1eb956; }
+    </style>
+</head>
+<body>
+
+    <section class="banner">
+        <h1>Perlengkapan Pemutar Vinyl</h1>
+        <p>Semua kebutuhan untuk merawat dan memutar piringan hitam: brush pembersih, stylus, slipmat, cleaning kit, dan lainnya. Satu tempat, kualitas terjaga.</p>
+    </section>
+
+    <div class="grid">
+
+        <div class="card">
+            <a class="card-img" href="https://www.tokopedia.com/search?q=vinyl+cleaning+kit" target="_blank" rel="noopener">
+                <img src="https://media.monotaro.id/mid01/full/Kebutuhan%20Kantor/Produk%20Komputer%20%26%20Otomatisasi%20Kantor/Perlengkapan%20Komputer/Suplai%20Pembersih%20Komputer/audio-technica%20Record%20cleaner/audio-technica%20Record%20cleaner%20AT6012a%201pc/cnS052016455-1.jpg" alt="Cleaning Kit">
+                <span class="overlay">Lihat di Marketplace →</span>
+            </a>
+            <div class="card-body">
+                <h3>Vinyl Cleaning Kit Pro</h3>
+                <p class="desc">Cairan pembersih + microfiber cloth untuk hasil optimal.</p>
+                <p class="price">Rp 135.000</p>
+                <a class="btn-wa" href="https://wa.me/6281234567890?text=Halo%20saya%20mau%20pesan%20Vinyl%20Cleaning%20Kit%20Pro" target="_blank">💬 Tanya via WhatsApp</a>
+            </div>
+        </div>
+
+        <div class="card">
+            <a class="card-img" href="https://www.tokopedia.com/search?q=anti+static+brush+vinyl" target="_blank" rel="noopener">
+                <img src="https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcRzx60dX3UVAxaC9kBVKpcA5rMEYqb_bLWtbZg_7FHC0xW_K1gLryWuTtVdsCJsZkMDErKr8O0bm75qhfkS-bmtpRt7Ct2k-dwG2kF9dT7lHdpRcxmmeWh7bAZ076-6tfb6GiEH4g&usqp=CAc" alt="Anti Static Brush">
+                <span class="overlay">Lihat di Marketplace →</span>
+            </a>
+            <div class="card-body">
+                <h3>Anti-Static Brush</h3>
+                <p class="desc">Bulu lembut karbon untuk debu halus & listrik statis.</p>
+                <p class="price">Rp 65.000</p>
+                <a class="btn-wa" href="https://wa.me/6281234567890?text=Halo%20saya%20mau%20pesan%20Anti-Static%20Brush" target="_blank">💬 Tanya via WhatsApp</a>
+            </div>
+        </div>
+
+        <div class="card">
+            <a class="card-img" href="https://www.tokopedia.com/search?q=slipmat+turntable" target="_blank" rel="noopener">
+                <img src="https://down-id.img.susercontent.com/file/id-11134207-7ra0r-mb5s0qyak3z203" alt="Slipmat">
+                <span class="overlay">Lihat di Marketplace →</span>
+            </a>
+            <div class="card-body">
+                <h3>Felt Slipmat Premium</h3>
+                <p class="desc">Slipmat felt 3mm, kurangi getaran & lindungi vinyl.</p>
+                <p class="price">Rp 45.000</p>
+                <a class="btn-wa" href="https://wa.me/6281234567890?text=Halo%20saya%20mau%20pesan%20Felt%20Slipmat" target="_blank">💬 Tanya via WhatsApp</a>
+            </div>
+        </div>
+
+        <div class="card">
+            <a class="card-img" href="https://www.tokopedia.com/search?q=stylus+replacement+needle" target="_blank" rel="noopener">
+                <img src="https://wafuu.com/cdn/shop/files/audio-technica-atn3600lc-replacement-stylus-for-record-player-white-478170_540x.jpg?v=1740756722" alt="Stylus">
+                <span class="overlay">Lihat di Marketplace →</span>
+            </a>
+            <div class="card-body">
+                <h3>Replacement Stylus</h3>
+                <p class="desc">Jarum pengganti universal untuk turntable entry-level.</p>
+                <p class="price">Rp 180.000</p>
+                <a class="btn-wa" href="https://wa.me/6281234567890?text=Halo%20saya%20mau%20pesan%20Replacement%20Stylus" target="_blank">💬 Tanya via WhatsApp</a>
+            </div>
+        </div>
+
+        <div class="card">
+            <a class="card-img" href="https://www.tokopedia.com/search?q=vinyl+inner+sleeve" target="_blank" rel="noopener">
+                <img src="https://theaudiophileman.com/wp-content/uploads/2023/09/12-white-polylined-2-1.jpg" alt="Inner Sleeve">
+                <span class="overlay">Lihat di Marketplace →</span>
+            </a>
+            <div class="card-body">
+                <h3>Inner Sleeve Anti-Static (10 pcs)</h3>
+                <p class="desc">Lapisan pelindung dalam, hindari goresan pada vinyl.</p>
+                <p class="price">Rp 55.000</p>
+                <a class="btn-wa" href="https://wa.me/6281234567890?text=Halo%20saya%20mau%20pesan%20Inner%20Sleeve" target="_blank">💬 Tanya via WhatsApp</a>
+            </div>
+        </div>
+
+        <div class="card">
+            <a class="card-img" href="https://www.tokopedia.com/search?q=record+weight+clamp" target="_blank" rel="noopener">
+                <img src="https://www.turntablelab.com/cdn/shop/files/viborg-black-5mainjpg.jpg?v=1780672407" alt="Record Weight">
+                <span class="overlay">Lihat di Marketplace →</span>
+            </a>
+            <div class="card-body">
+                <h3>Record Weight Clamp</h3>
+                <p class="desc">Menekan vinyl agar stabil & mengurangi getaran.</p>
+                <p class="price">Rp 210.000</p>
+                <a class="btn-wa" href="https://wa.me/6281234567890?text=Halo%20saya%20mau%20pesan%20Record%20Weight" target="_blank">💬 Tanya via WhatsApp</a>
+            </div>
+        </div>
+
+        <div class="card">
+            <a class="card-img" href="https://www.tokopedia.com/search?q=vinyl+outer+sleeve" target="_blank" rel="noopener">
+                <img src="https://www.discrepancy-records.com.au/assets/thumb/W0-OUTERSLV.jpg?20260828190033" alt="Outer Sleeve">
+                <span class="overlay">Lihat di Marketplace →</span>
+            </a>
+            <div class="card-body">
+                <h3>Outer Sleeve (10 pcs)</h3>
+                <p class="desc">Pelindung luar transparan, cegah debu & lembap.</p>
+                <p class="price">Rp 50.000</p>
+                <a class="btn-wa" href="https://wa.me/6281234567890?text=Halo%20saya%20mau%20pesan%20Outer%20Sleeve" target="_blank">💬 Tanya via WhatsApp</a>
+            </div>
+        </div>
+
+        <div class="card">
+            <a class="card-img" href="https://www.tokopedia.com/search?q=stylus+force+gauge" target="_blank" rel="noopener">
+                <img src="https://3.bp.blogspot.com/-8yEukEd7CZw/XLIIzGZqNJI/AAAAAAADL14/cIDsy2Nes90xXJknjTiLPhepx4eeWRiFgCK4BGAYYCw/s1600/6.jpg" alt="Stylus Gauge">
+                <span class="overlay">Lihat di Marketplace →</span>
+            </a>
+            <div class="card-body">
+                <h3>Stylus Force Gauge</h3>
+                <p class="desc">Ukur tekanan jarum agar tidak merusak alur vinyl.</p>
+                <p class="price">Rp 165.000</p>
+                <a class="btn-wa" href="https://wa.me/6281234567890?text=Halo%20saya%20mau%20pesan%20Stylus%20Force%20Gauge" target="_blank">💬 Tanya via WhatsApp</a>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>

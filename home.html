@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home — Vinyl Hilmi</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --cream:#F5EFE6; --cream-soft:#FBF7F0; --brown-deep:#3E2C23;
+            --brown-warm:#6B4A36; --terracotta:#C96A4B; --terracotta-d:#A4512F;
+            --mustard:#D9A441; --olive:#7A8450; --border:#E4D8C7; --text-muted:#7A6A5D;
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family:'Inter',sans-serif; background:var(--cream); color:var(--brown-deep); line-height:1.6; padding:20px; }
+        h1,h2,h3 { font-family:'DM Serif Display',serif; font-weight:400; }
+
+        .hero {
+            background: linear-gradient(135deg, var(--brown-deep) 0%, var(--brown-warm) 100%);
+            color: #fff;
+            padding: 50px 40px;
+            border-radius: 18px;
+            margin-bottom: 32px;
+            position: relative;
+            overflow: hidden;
+            animation: fadeUp 0.7s ease-out;
+        }
+        .hero::after {
+            content:"";
+            position:absolute; right:-80px; top:50%;
+            width:320px; height:320px;
+            background: radial-gradient(circle, #1A1512 0 42%, var(--terracotta) 43% 45%, #1A1512 46% 55%, var(--mustard) 56% 58%, #1A1512 59% 100%);
+            border-radius:50%;
+            transform: translateY(-50%);
+            animation: spin 20s linear infinite;
+            opacity:0.7;
+        }
+        @keyframes spin { to { transform: translateY(-50%) rotate(360deg); } }
+        @keyframes fadeUp { from { opacity:0; transform: translateY(20px); } to { opacity:1; transform:translateY(0); } }
+
+        .hero h1 { font-size: clamp(2rem, 5vw, 3.2rem); margin-bottom: 12px; position:relative; z-index:2; }
+        .hero p { color: rgba(245,239,230,0.85); max-width: 520px; margin-bottom: 24px; position:relative; z-index:2; }
+        .hero .btn {
+            display:inline-block;
+            background: var(--mustard); color: var(--brown-deep);
+            padding: 13px 28px; border-radius: 8px;
+            font-weight: 600; text-decoration: none;
+            position: relative; z-index: 2;
+            transition: 0.25s;
+        }
+        .hero .btn:hover { background: #f0b855; transform: translateY(-2px); }
+
+        .section-title { font-size: 1.8rem; margin: 32px 0 20px; display: flex; align-items: center; gap: 12px; }
+        .section-title::after { content:""; flex:1; height:1px; background:var(--border); }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        .card {
+            background: var(--cream-soft);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            animation: fadeUp 0.6s ease-out backwards;
+        }
+        .card:nth-child(1){animation-delay:.05s} .card:nth-child(2){animation-delay:.1s}
+        .card:nth-child(3){animation-delay:.15s} .card:nth-child(4){animation-delay:.2s}
+        .card:hover { transform: translateY(-6px); box-shadow: 0 14px 30px rgba(62,44,35,0.15); }
+        .card a { display:block; overflow:hidden; aspect-ratio: 1/1; background:#ddd; }
+        .card img { width:100%; height:100%; object-fit:cover; transition: transform 0.5s; }
+        .card:hover img { transform: scale(1.06); }
+        .card-body { padding: 14px 16px; }
+        .card-body h3 { font-size: 1.05rem; margin-bottom: 4px; }
+        .card-body .genre { font-size:12px; color:var(--text-muted); }
+        .card-body .price { color: var(--terracotta); font-weight:600; margin-top:6px; }
+        .condition {
+            display:inline-block; font-size:11px; padding:2px 8px;
+            background: var(--olive); color:#fff; border-radius: 20px;
+            margin-top: 6px;
+        }
+
+        .kategori-row { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:18px; }
+        .kategori {
+            padding: 26px 22px;
+            border-radius: 14px;
+            color:#fff;
+            text-decoration:none;
+            transition: transform 0.3s;
+            position:relative;
+            overflow:hidden;
+        }
+        .kategori:hover { transform: translateY(-4px) rotate(-0.5deg); }
+        .kategori h3 { font-size:1.4rem; margin-bottom:4px; }
+        .kategori p { font-size: 13px; opacity: 0.9; }
+        .k-indie   { background: linear-gradient(135deg, #C96A4B, #A4512F); }
+        .k-midwest { background: linear-gradient(135deg, #7A8450, #5a6238); }
+        .k-shoegaze{ background: linear-gradient(135deg, #6B4A36, #3E2C23); }
+        .k-aksesoris{ background: linear-gradient(135deg, #D9A441, #b8842a); }
+
+        .promo {
+            margin-top: 32px;
+            padding: 28px;
+            background: var(--cream-soft);
+            border: 2px dashed var(--mustard);
+            border-radius: 14px;
+            text-align: center;
+        }
+        .promo h3 { font-size: 1.5rem; margin-bottom: 8px; }
+        .promo p { color: var(--text-muted); margin-bottom: 16px; }
+        .promo a {
+            display:inline-block; background: var(--terracotta); color:#fff;
+            padding: 12px 26px; border-radius: 8px; text-decoration:none; font-weight:600;
+            transition: 0.25s;
+        }
+        .promo a:hover { background: var(--terracotta-d); }
+    </style>
+</head>
+<body>
+
+    <section class="hero">
+        <h1>Piringan Hitam,<br>Cerita Baru.</h1>
+        <p>Koleksi vinyl bekas berkualitas dari indie, midwest emo, hingga shoegaze. Semua dicuci, dicek, dan siap diputar.</p>
+        <a href="katalog.html" class="btn">Jelajahi Katalog →</a>
+    </section>
+
+    <h2 class="section-title">📀 Genre Pilihan</h2>
+    <div class="kategori-row">
+        <a href="productsi.html" class="kategori k-indie">
+            <h3>🌅 Indie</h3>
+            <p>Rilisan independen dengan karakter kuat.</p>
+        </a>
+        <a href="productsm.html" class="kategori k-midwest">
+            <h3>🌇 Midwest Emo</h3>
+            <p>Gitar twinkle dan lirik jujur.</p>
+        </a>
+        <a href="productss.html" class="kategori k-shoegaze">
+            <h3>🌙 Shoegaze</h3>
+            <p>Dinding suara yang membuai.</p>
+        </a>
+        <a href="perlengkapan.html" class="kategori k-aksesoris">
+            <h3>🎧 Perlengkapan</h3>
+            <p>Brush, stylus, cleaning kit, dan lainnya.</p>
+        </a>
+    </div>
+
+    <h2 class="section-title">🔥 Rekomendasi Minggu Ini</h2>
+    <div class="grid">
+        <div class="card">
+            <a href="https://www.tokopedia.com/search?q=vinyl+indie" target="_blank" rel="noopener">
+                <img src="https://images.unsplash.com/photo-1539375665275-f9de415ef9ac?w=600&auto=format&fit=crop" alt="Vinyl Indie">
+            </a>
+            <div class="card-body">
+                <h3>Sunset Boulevard LP</h3>
+                <p class="genre">Indie · 2022</p>
+                <span class="condition">Near Mint</span>
+                <p class="price">Rp 285.000</p>
+            </div>
+        </div>
+        <div class="card">
+            <a href="https://www.tokopedia.com/search?q=vinyl+midwest+emo" target="_blank" rel="noopener">
+                <img src="https://images.unsplash.com/photo-1461360370896-922624d12aa1?w=600&auto=format&fit=crop" alt="Vinyl Midwest">
+            </a>
+            <div class="card-body">
+                <h3>Twinkle Nights</h3>
+                <p class="genre">Midwest Emo · 2021</p>
+                <span class="condition">Very Good+</span>
+                <p class="price">Rp 320.000</p>
+            </div>
+        </div>
+        <div class="card">
+            <a href="https://www.tokopedia.com/search?q=vinyl+shoegaze" target="_blank" rel="noopener">
+                <img src="https://images.unsplash.com/photo-1483412033650-1015ddeb83d1?w=600&auto=format&fit=crop" alt="Vinyl Shoegaze">
+            </a>
+            <div class="card-body">
+                <h3>Waves of Static</h3>
+                <p class="genre">Shoegaze · 2020</p>
+                <span class="condition">Near Mint</span>
+                <p class="price">Rp 340.000</p>
+            </div>
+        </div>
+        <div class="card">
+            <a href="https://www.tokopedia.com/search?q=vinyl+cleaner+kit" target="_blank" rel="noopener">
+                <img src="https://images.unsplash.com/photo-1487215078519-e21cc028cb29?w=600&auto=format&fit=crop" alt="Cleaning Kit">
+            </a>
+            <div class="card-body">
+                <h3>Cleaning Kit Pro</h3>
+                <p class="genre">Aksesoris</p>
+                <span class="condition">Baru</span>
+                <p class="price">Rp 135.000</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="promo">
+        <h3>📞 Butuh rekomendasi?</h3>
+        <p>Chat kami via WhatsApp — kami bantu pilih vinyl dan perlengkapan yang sesuai selera kamu.</p>
+        <a href="https://wa.me/6281234567890?text=Halo%20Vinyl%20Hilmi,%20saya%20mau%20tanya%20produk" target="_blank" rel="noopener">Tanya via WhatsApp</a>
+    </div>
+
+</body>
+</html>

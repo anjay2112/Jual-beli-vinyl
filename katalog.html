@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Katalog — Vinyl Hilmi</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --cream:#F5EFE6; --cream-soft:#FBF7F0; --brown-deep:#3E2C23;
+            --brown-warm:#6B4A36; --terracotta:#C96A4B; --terracotta-d:#A4512F;
+            --mustard:#D9A441; --olive:#7A8450; --border:#E4D8C7; --text-muted:#7A6A5D;
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family:'Inter',sans-serif; background:var(--cream); color:var(--brown-deep); line-height:1.6; padding:20px; }
+        h1,h2 { font-family:'DM Serif Display',serif; font-weight:400; }
+
+        .page-head { margin-bottom: 22px; }
+        .page-head h1 { font-size: 2rem; }
+        .page-head p { color: var(--text-muted); font-size: 14px; }
+
+        .filters {
+            display: flex; flex-wrap: wrap; gap: 10px;
+            padding: 16px;
+            background: var(--cream-soft);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            margin-bottom: 24px;
+            align-items: center;
+        }
+        .filters label { font-size: 13px; font-weight: 600; }
+        .filters select {
+            padding: 8px 12px;
+            border: 1.5px solid var(--border);
+            border-radius: 8px;
+            background: #fff;
+            font-family: inherit;
+            font-size: 13px;
+            color: var(--brown-deep);
+            cursor: pointer;
+        }
+        .filters select:focus { outline: none; border-color: var(--terracotta); }
+        .filters .count { margin-left:auto; font-size:13px; color:var(--text-muted); }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+            gap: 20px;
+        }
+        .card {
+            background: var(--cream-soft);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            overflow: hidden;
+            transition: 0.3s;
+            animation: fadeUp 0.5s ease-out backwards;
+            display: flex; flex-direction: column;
+        }
+        .card:hover { transform: translateY(-6px); box-shadow: 0 14px 30px rgba(62,44,35,0.15); }
+        @keyframes fadeUp { from { opacity:0; transform: translateY(16px); } to { opacity:1; transform:none; } }
+
+        .card-img { display:block; aspect-ratio:1/1; overflow:hidden; background:#ddd; position:relative; }
+        .card-img img { width:100%; height:100%; object-fit:cover; transition: transform 0.5s; }
+        .card:hover .card-img img { transform: scale(1.06); }
+        .card-img .overlay {
+            position:absolute; inset:0; background: rgba(62,44,35,0.55);
+            display:flex; align-items:center; justify-content:center;
+            color:#fff; font-weight:600; font-size:13px;
+            opacity:0; transition:0.3s;
+        }
+        .card:hover .card-img .overlay { opacity: 1; }
+
+        .card-body { padding: 14px 16px; flex:1; display:flex; flex-direction:column; }
+        .card-body h3 { font-size: 1rem; margin-bottom: 4px; }
+        .meta { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
+        .tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+        .tag {
+            font-size: 11px; padding: 2px 8px; border-radius: 20px;
+            background: var(--mustard); color: var(--brown-deep);
+            font-weight: 600;
+        }
+        .tag.genre { background: var(--olive); color:#fff; }
+        .price { color: var(--terracotta); font-weight: 700; font-size: 1.05rem; margin-bottom: 10px; margin-top:auto; }
+
+        .btn-wa {
+            display: block; text-align: center;
+            background: #25D366; color: #fff;
+            padding: 9px; border-radius: 8px;
+            text-decoration: none; font-size: 13px; font-weight: 600;
+            transition: 0.25s;
+        }
+        .btn-wa:hover { background: #1eb956; }
+
+        .no-result { text-align:center; padding:40px; color: var(--text-muted); font-size: 14px; }
+    </style>
+</head>
+<body>
+
+    <div class="page-head">
+        <h1>Katalog Vinyl</h1>
+        <p>Semua koleksi vinyl bekas berkualitas, siap diputar.</p>
+    </div>
+
+    <div class="filters">
+        <label for="filterGenre">Genre:</label>
+        <select id="filterGenre">
+            <option value="">Semua</option>
+            <option value="Indie">Indie</option>
+            <option value="Midwest Emo">Midwest Emo</option>
+            <option value="Shoegaze">Shoegaze</option>
+        </select>
+
+        <label for="filterKondisi">Kondisi:</label>
+        <select id="filterKondisi">
+            <option value="">Semua</option>
+            <option value="Near Mint">Near Mint</option>
+            <option value="Very Good+">Very Good+</option>
+            <option value="Very Good">Very Good</option>
+        </select>
+
+        <span class="count" id="count">0 produk</span>
+    </div>
+
+    <div class="grid" id="grid"></div>
+
+    <script>
+        const WA = "6281234567890";
+        const produk = [
+            // ===== PRODUK LAMA =====
+            { judul:"SIMILAR LP", genre:"Midwest Emo", kondisi:"Near Mint", harga:185000, tahun:2023,
+              img:"https://f4.bcbits.com/img/a2655476269_10.jpg",
+              link:"https://www.tokopedia.com/heheplmid/vinyl-eleventwelfth-similar-grey-1736226697519138719?extParam=ivf%3Dfalse%26keyword%3Dvinyl+eleventwelfth%26search_id%3D20261030023443F8C1F23D6A8D8D2B3K05%26src%3Dsearch&t_id=1793327696175&t_st=1&t_pp=search_result&t_efo=search_pure_goods_card&t_ef=goods_search&t_sm=&t_spt=search_result" },
+            { judul:"DIFFERENT LP", genre:"Midwest Emo", kondisi:"Very Good+", harga:874000, tahun:2025,
+              img:"https://f4.bcbits.com/img/a2182962246_10.jpg",
+              link:"https://www.tokopedia.com/popcultureindonesia/ready-stock-eleventwelfth-different-black-splatter-grey-white-vinyl-first-press-piringan-hitam-lp-similar-perunggu-1735799883236672764?extParam=ivf%3Dfalse%26keyword%3Deleventwelfth+vinyl%26search_id%3D20261030033549F8C1F23D6A8D8D34AQCC%26src%3Dsearch" },
+            { judul:"Vakansi LP", genre:"Indie", kondisi:"Very Good+", harga:525000, tahun:2010,
+              img:"https://p16-images-sign-sg.tokopedia-static.net/tos-alisg-i-aphluv4xwc-sg/723b2326c8ae44b2938c20e6fade86da~tplv-aphluv4xwc-resize-jpeg:700:0.jpeg?lk3s=0ccea506&x-expires=1793343013&x-signature=nagUkoqUCu8LEzK7U3ri%2BGJIfpM%3D&x-signature-webp=rIs1lj3wTKg0j24EyEQkY%2F9olKo%3D",
+              link:"https://www.tokopedia.com/demajors-official/vinyl-album-white-shoes-the-couples-company-vakansi-1733591378011719265?extParam=ivf%3Dfalse%26keyword%3Dwhite+shoes+vinyl%26search_id%3D2026103003384954972DCC5802692ECPQ7%26src%3Dsearch&t_id=1793331524205&t_st=1&t_pp=search_result&t_efo=search_pure_goods_card&t_ef=goods_search&t_sm=&t_spt=search_result" },
+            { judul:"Topstar Collection LP", genre:"Indie", kondisi:"Near Mint", harga:2775000, tahun:2023,
+              img:"https://f4.bcbits.com/img/a0813154691_10.jpg",
+              link:"https://www.tokopedia.com/specialestuff/cetakan-pertama-kuning-vinyl-white-shoes-and-couples-company-topstar-collection-1735670644373029898?extParam=ivf%3Dfalse%26keyword%3Dwhite+shoes+vinyl%26search_id%3D2026103003384954972DCC5802692ECPQ7%26src%3Dsearch&t_id=1793331524205&t_st=3&t_pp=search_result&t_efo=search_pure_goods_card&t_ef=goods_search&t_sm=&t_spt=search_result" },
+            { judul:"3 Hari Untuk Selamanya LP", genre:"Indie", kondisi:"Near Mint", harga:399000, tahun:2026,
+              img:"https://demajors.com/uploads/album/photo/thumb/medium/FLOAT1.png",
+              link:"https://demajors.com/new/Album/detailAlbum/1001" },
+            { judul:"Rukiah's Suites 2LP", genre:"Indie", kondisi:"Very Good", harga:625000, tahun:2024,
+              img:"https://p16-images-sign-sg.tokopedia-static.net/tos-alisg-i-aphluv4xwc-sg/img/VqbcmM/2024/11/2/fae06cdd-079e-4519-8655-935d43d010b0.jpg~tplv-aphluv4xwc-resize-jpeg:700:0.jpeg?lk3s=0ccea506&x-expires=1793359791&x-signature=I3SphqXqYkEHv%2FYp3WiGGUwTZHc%3D&x-signature-webp=ZUaBl5gZczpURUEi%2BWEytg9Q6ew%3D",
+              link:"https://www.tokopedia.com/hellogoodbuy/tigapagi-rukiah-s-suites-2lp-vinyl-marble-colour-piringan-hitam-rare-hitam-59cc5?extParam=ivf%3Dfalse%26keyword%3Dtigapagi%26search_id%3D2026103008282854972DCC5802691EE8M5%26src%3Dsearch" },
+            { judul:"Souvlaki LP", genre:"Shoegaze", kondisi:"Near Mint", harga:827000, tahun:2025,
+              img:"https://p16-images-sign-sg.tokopedia-static.net/tos-alisg-i-aphluv4xwc-sg/b465986bfe88427091f4d034817e906b~tplv-aphluv4xwc-white-pad-v1:1600:1600.jpeg?lk3s=0ccea506&x-expires=1793360008&x-signature=0LrSy5DbmCRqmcOvoyjP%2F%2Broqlc%3D&x-signature-webp=GQ03YtXL9nuE2QaVTxpJ6Thd8Do%3D",
+              link:"https://www.tokopedia.com/world-records/vinyl-album-slowdive-souvlaki-1738245014470886763?extParam=ivf%3Dfalse%26keyword%3Dslowdive+vinyl%26search_id%3D202610300832521543843A4723ED36DSXA%26src%3Dsearch&t_id=1793349146109&t_st=1&t_pp=search_result&t_efo=search_pure_goods_card&t_ef=goods_search&t_sm=&t_spt=search_result" },
+            { judul:"American Football (LP1)", genre:"Midwest Emo", kondisi:"Very Good", harga:195000, tahun:1999,
+              img:"https://p16-images-sign-sg.tokopedia-static.net/tos-alisg-i-aphluv4xwc-sg/img/VqbcmM/2023/7/27/60cb750e-2fcd-460c-89f4-9a7f7d6878cd.jpg~tplv-aphluv4xwc-white-pad-v1:1600:1600.jpeg?lk3s=0ccea506&x-expires=1793360234&x-signature=4pTcUgQcFethn1PfJiS1foc3G6Q%3D&x-signature-webp=Ka%2BWCHXn7n1GXpkz6qfFwPYN8A8%3D",
+              link:"https://www.tokopedia.com/playlistrecord/vinyl-american-football-american-football-1lp-clrd?extParam=ivf%3Dfalse%26keyword%3Damerican+football+vinyl%26search_id%3D20261030083653BEED13602B9B0E271R2H%26src%3Dsearch%26whid%3D5789916" },
+            { judul:"Efek Rumah Kaca LP", genre:"Indie", kondisi:"Near Mint", harga:1150000, tahun:2025,
+              img:"https://p16-images-sign-sg.tokopedia-static.net/tos-alisg-i-aphluv4xwc-sg/d28477ec6751407a9e980c19150b3657~tplv-aphluv4xwc-white-pad-v1:1600:1600.jpeg?lk3s=0ccea506&x-expires=1793361263&x-signature=i1GgZOVTCJkltnHVECat37aRG%2FU%3D&x-signature-webp=DXCnl8yYa8vss2rGdL7DHR53LKs%3D",
+              link:"https://www.tokopedia.com/ciptaswara/efek-rumah-kaca-selftitle-self-title-vinyl-records-piringan-hitam-ph-lp-1732560402749097345?extParam=ivf%3Dfalse%26keyword%3Defek+rumah+kaca+vinyl%26search_id%3D202610300854081543843A4723ED050ZGF%26src%3Dsearch&t_id=1793350401051&t_st=1&t_pp=search_result&t_efo=search_pure_goods_card&t_ef=goods_search&t_sm=&t_spt=search_result" },
+            { judul:"Rimpang LP", genre:"Indie", kondisi:"Near Mint", harga:542000, tahun:2024,
+              img:"https://p16-images-sign-sg.tokopedia-static.net/tos-alisg-i-aphluv4xwc-sg/img/VqbcmM/2024/8/31/787c66ef-0df1-45fc-8656-f96eb4a6f138.jpg~tplv-aphluv4xwc-resize-jpeg:700:0.jpeg?lk3s=0ccea506&x-expires=1793361376&x-signature=geXEcoFPERPpfz%2FfgFF%2Fj0Q3EXY%3D&x-signature-webp=dzPmqKoEXg2TiWG3XaFgULZdLzA%3D",
+              link:"https://www.tokopedia.com/demajors-official/vinyl-album-efek-rumah-kaca-rimpang-official?extParam=ivf%3Dfalse%26keyword%3Defek+rumah+kaca+vinyl%26search_id%3D202610300854081543843A4723ED050ZGF%26src%3Dsearch&t_id=1793350401051&t_st=2&t_pp=search_result&t_efo=search_pure_goods_card&t_ef=goods_search&t_sm=&t_spt=search_result" },
+	    { judul:"Humaniora LP", genre:"Indie", kondisi:"Very Good", harga:3335000, tahun:2020,
+              img:"https://p16-images-sign-sg.tokopedia-static.net/tos-alisg-i-aphluv4xwc-sg/img/VqbcmM/2024/11/12/71cd8a13-40f9-420f-9c89-aafb270180b3.jpg~tplv-aphluv4xwc-white-pad-v1:1600:1600.jpeg?lk3s=0ccea506&x-expires=1793361612&x-signature=tU1VKbfsuY4jP7YS3QMIbuwWHwI%3D&x-signature-webp=G6P15s9hyRVncmH3iXLeLQjWsZY%3D",
+              link:"https://www.tokopedia.com/ciptaswara/fourtwnty-humaniora-liztomania-vinyl-piringan-hitam-ph-lp-1737480310840526209?extParam=ivf%3Dfalse%26keyword%3Dhumaniora+vinyl%26search_id%3D2026103008595454972DCC580269015M52%26src%3Dsearch&t_id=1793350401051&t_st=3&t_pp=search_result&t_efo=search_pure_goods_card&t_ef=goods_search&t_sm=&t_spt=search_result" },
+            { judul:"Loveless LP", genre:"Shoegaze", kondisi:"Near Mint", harga:830000, tahun:2025,
+              img:"https://p16-images-sign-sg.tokopedia-static.net/tos-alisg-i-aphluv4xwc-sg/51975302085841be9d21edee9219c2ef~tplv-aphluv4xwc-white-pad-v1:1600:1600.jpeg?lk3s=0ccea506&x-expires=1793361730&x-signature=Sblx0tIBo5p8Pa8EJzs%2F%2BCN%2FteM%3D&x-signature-webp=ZAXpKU3NWPFmr0w6W%2F8N6KREgKI%3D",
+              link:"https://www.tokopedia.com/phr/vinyl-my-bloody-valentine-loveless-analog-cut-piringan-hitam-ph?extParam=ivf%3Dfalse%26keyword%3Dmybloody+valentine+vinyl%26search_id%3D2026103009013304F5B96522DC7E1DCEMB%26src%3Dsearch&t_id=1793350401051&t_st=4&t_pp=search_result&t_efo=search_pure_goods_card&t_ef=goods_search&t_sm=&t_spt=search_result" },
+            { judul:"American Football (LP4)", genre:"Midwest Emo", kondisi:"Near Mint", harga:553000, tahun:2026,
+              img:"https://www.polyvinylrecords.com/cdn/shop/files/AF_LP4_SQ1Retail_57132b8f-8cbc-4a69-b8db-787ec6efa470.jpg?v=1792520465&width=2800",
+              link:"https://www.polyvinylrecords.com/products/american-football-american-football-lp4" },
+            { judul:"Stratosphere LP", genre:"Shoegaze", kondisi:"Very Good", harga:516000, tahun:1998,
+              img:"https://www.polyvinylrecords.com/cdn/shop/files/f6e8de88807006538cd9be5fd3ba51c1_103d6b6b0a8f73debca290a7cbae4e430d073891_product_photo.jpg?v=1739893943&width=2800",
+              link:"https://millersrecords.com/product/efek-rumah-kaca-pandai-besi-desember-7-used/" }
+        ];
+
+        function rupiah(n) { return "Rp " + n.toLocaleString('id-ID'); }
+
+        function render() {
+            const g = document.getElementById('filterGenre').value;
+            const k = document.getElementById('filterKondisi').value;
+            const data = produk.filter(p => (!g || p.genre === g) && (!k || p.kondisi === k));
+
+            const grid = document.getElementById('grid');
+            grid.innerHTML = data.map(p => {
+                const waMsg = encodeURIComponent(`Halo Vinyl Hilmi, saya tertarik dengan "${p.judul}" (${p.genre}, ${p.kondisi}) - ${rupiah(p.harga)}. Masih tersedia?`);
+                return `
+                <div class="card">
+                    <a class="card-img" href="${p.link}" target="_blank" rel="noopener">
+                        <img src="${p.img}" alt="${p.judul}" onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,#D9A441,#7A8450)'">
+                        <span class="overlay">Lihat di Marketplace →</span>
+                    </a>
+                    <div class="card-body">
+                        <h3>${p.judul}</h3>
+                        <p class="meta">${p.tahun}</p>
+                        <div class="tags">
+                            <span class="tag genre">${p.genre}</span>
+                            <span class="tag">${p.kondisi}</span>
+                        </div>
+                        <p class="price">${rupiah(p.harga)}</p>
+                        <a class="btn-wa" href="https://wa.me/${WA}?text=${waMsg}" target="_blank" rel="noopener">💬 Tanya via WhatsApp</a>
+                    </div>
+                </div>`;
+            }).join('');
+
+            document.getElementById('count').textContent = data.length + " produk";
+            if (!data.length) grid.innerHTML = '<p class="no-result" style="grid-column:1/-1;">Tidak ada produk yang cocok dengan filter.</p>';
+        }
+
+        document.getElementById('filterGenre').addEventListener('change', render);
+        document.getElementById('filterKondisi').addEventListener('change', render);
+        render();
+    </script>
+</body>
+</html>

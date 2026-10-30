@@ -1,0 +1,193 @@
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <style>
+                        body { font-family: Arial, sans-serif; padding: 25px; color: #333; line-height: 1.6; }
+                        h1 { color: #1e3a5f; margin-bottom: 10px; }
+                        .team { display: flex; gap: 15px; margin-top: 20px; }
+                        .member {
+                            flex: 1;
+                            background: #f8f9fa;
+                            padding: 15px;
+                            border-radius: 8px;
+                            border: 1px solid #ddd;
+                            text-align: center;
+                            cursor: pointer;
+                            transition: 0.2s;
+                        }
+                        .member:hover {
+                            background: #eef3f8;
+                            border-color: #1e3a5f;
+                        }
+                        .member.active {
+                            border-color: #1e3a5f;
+                            box-shadow: 0 2px 8px rgba(30,58,95,0.15);
+                        }
+
+                        /* Panel yang muncul saat salah satu kartu diklik */
+                        .panel {
+                            display: none;
+                            margin-top: 20px;
+                            background: #fff;
+                            border: 1px solid #ddd;
+                            border-radius: 8px;
+                            padding: 20px;
+                            animation: fadeIn 0.3s ease-in-out;
+                        }
+                        .panel.active { display: block; }
+                        @keyframes fadeIn {
+                            from { opacity: 0; transform: translateY(6px); }
+                            to { opacity: 1; transform: translateY(0); }
+                        }
+                        .panel h2 { color: #1e3a5f; margin-bottom: 15px; font-size: 20px; }
+
+                        /* Tabel form pada panel Menjual Vinyl */
+                        .form-table {
+                            width: 100%;
+                            border-collapse: collapse;
+                        }
+                        .form-table th, .form-table td {
+                            border: 1px solid #ddd;
+                            padding: 10px 12px;
+                            text-align: left;
+                            vertical-align: top;
+                        }
+                        .form-table th {
+                            background: #1e3a5f;
+                            color: white;
+                            width: 160px;
+                            font-weight: normal;
+                        }
+                        .form-table input[type="text"],
+                        .form-table textarea {
+                            width: 100%;
+                            padding: 8px;
+                            border: 1px solid #ccc;
+                            border-radius: 5px;
+                            font-family: inherit;
+                            resize: vertical;
+                        }
+                        #preview-foto {
+                            display: none;
+                            margin-top: 10px;
+                            width: 140px;
+                            height: 140px;
+                            object-fit: cover;
+                            border-radius: 6px;
+                            border: 1px solid #ccc;
+                        }
+                        .btn-submit {
+                            margin-top: 15px;
+                            background: #1e3a5f;
+                            color: white;
+                            border: none;
+                            padding: 10px 22px;
+                            border-radius: 5px;
+                            cursor: pointer;
+                            font-size: 15px;
+                        }
+                        .btn-submit:hover { background: #16304e; }
+
+                        /* Panel Membeli Vinyl */
+                        .panel a.btn-link {
+                            display: inline-block;
+                            margin-top: 10px;
+                            background: #1e3a5f;
+                            color: white;
+                            text-decoration: none;
+                            padding: 10px 20px;
+                            border-radius: 5px;
+                        }
+                        .panel a.btn-link:hover { background: #16304e; }
+                    </style>
+                </head>
+                <body>
+                    <h1>Tentang Toko Kami</h1>
+                    <p>Kami adalah penyedia solusi dari berbagai masalah yang anda alami, kami memiiki berbagai macam vinyl dengan berbagai macam genre musik sesuai dengan keinginan anda. Klik salah satu jika anda ingin menjual atau membeli vinyl dari Toko kami, Terimakasih</p>
+                    <div class="team">
+                        <div class="member" id="card-jual" onclick="showPanel('jual')">
+                            <h4>Menjual vinyl</h4>
+                            <p>Kami menerima penjualan vinyl</p>
+                        </div>
+                        <div class="member" id="card-beli" onclick="showPanel('beli')">
+                            <h4>Membeli vinyl</h4>
+                            <p>Kami menjual bebagai macam vinyl</p>
+                        </div>
+                    </div>
+
+                    <!-- Panel: Menjual Vinyl (unggah foto + deskripsi produk) -->
+                    <div class="panel" id="panel-jual">
+                        <h2>📀 Jual Vinyl Kamu</h2>
+                        <table class="form-table">
+                            <tr>
+                                <th>Nama Produk</th>
+                                <td><input type="text" id="nama-produk" placeholder="Contoh: Bimbang - Vinyl Record"></td>
+                            </tr>
+                            <tr>
+                                <th>Foto Produk</th>
+                                <td>
+                                    <input type="file" id="foto-produk" accept="image/*" onchange="previewFoto(event)">
+                                    <br>
+                                    <img id="preview-foto" alt="Pratinjau foto produk">
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Deskripsi</th>
+                                <td><textarea id="deskripsi-produk" rows="4" placeholder="Ceritakan kondisi, genre, dan detail vinyl yang mau kamu jual..."></textarea></td>
+                            </tr>
+                            <tr>
+                                <th>Harga (Rp)</th>
+                                <td><input type="text" id="harga-produk" placeholder="Contoh: 250000"></td>
+                            </tr>
+                        </table>
+                        <button class="btn-submit" onclick="submitJual()">Unggah Produk</button>
+                        <p id="status-jual" style="margin-top:10px; font-weight:bold; color:#2e7d32;"></p>
+                    </div>
+
+                    <!-- Panel: Membeli Vinyl -->
+                    <div class="panel" id="panel-beli">
+                        <h2>🛒 Beli Vinyl</h2>
+                        <p>Lihat koleksi vinyl yang tersedia dari berbagai genre di katalog produk kami, lalu hubungi kami untuk melakukan pembelian.</p>
+                        <a class="btn-link" href="productsi.html" target="konten">Lihat Katalog Produk</a>
+                    </div>
+
+                    <script>
+                        function showPanel(kind) {
+                            // Tampilkan panel yang sesuai, sembunyikan yang lain
+                            document.getElementById('panel-jual').classList.toggle('active', kind === 'jual');
+                            document.getElementById('panel-beli').classList.toggle('active', kind === 'beli');
+
+                            // Tandai kartu yang sedang aktif
+                            document.getElementById('card-jual').classList.toggle('active', kind === 'jual');
+                            document.getElementById('card-beli').classList.toggle('active', kind === 'beli');
+                        }
+
+                        function previewFoto(event) {
+                            const file = event.target.files[0];
+                            const img = document.getElementById('preview-foto');
+                            if (file) {
+                                img.src = URL.createObjectURL(file);
+                                img.style.display = 'block';
+                            } else {
+                                img.style.display = 'none';
+                            }
+                        }
+
+                        function submitJual() {
+                            const nama = document.getElementById('nama-produk').value.trim();
+                            const foto = document.getElementById('foto-produk').files[0];
+                            const deskripsi = document.getElementById('deskripsi-produk').value.trim();
+                            const status = document.getElementById('status-jual');
+
+                            if (!nama || !foto || !deskripsi) {
+                                status.style.color = '#c62828';
+                                status.textContent = 'Mohon isi nama produk, unggah foto, dan tulis deskripsi terlebih dahulu.';
+                                return;
+                            }
+
+                            status.style.color = '#2e7d32';
+                            status.textContent = 'Produk "' + nama + '" berhasil diunggah! Tim kami akan segera menghubungi kamu.';
+                        }
+                    </script>
+                </body>
+                </html>

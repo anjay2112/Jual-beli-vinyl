@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pemutar Midwest Emo — Vinyl Hilmi</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --cream:#F5EFE6; --cream-soft:#FBF7F0; --brown-deep:#3E2C23;
+            --brown-warm:#6B4A36; --terracotta:#C96A4B; --terracotta-d:#A4512F;
+            --mustard:#D9A441; --mustard-d:#b8842a; --olive:#7A8450; --olive-d:#5a6238;
+            --border:#E4D8C7; --text-muted:#7A6A5D; --rose:#c85a5a;
+        }
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background-color: var(--cream);
+            background-image:
+                radial-gradient(circle at 85% 15%, rgba(122,132,80,0.18) 0%, transparent 38%),
+                radial-gradient(circle at 15% 85%, rgba(217,164,65,0.16) 0%, transparent 42%);
+            color: var(--brown-deep);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .player-container {
+            background: var(--cream-soft);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 30px 34px;
+            box-shadow: 0 20px 50px rgba(62,44,35,0.12);
+            text-align: center;
+            max-width: 520px;
+            width: 100%;
+            max-height: 95vh;
+            overflow-y: auto;
+        }
+
+        h1 {
+            font-family: 'DM Serif Display', serif;
+            font-weight: 400;
+            color: var(--brown-deep);
+            margin: 0 0 6px 0;
+            font-size: 26px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        h1::before {
+            content: "●";
+            color: var(--olive);
+            font-size: 22px;
+            animation: spin 8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .subtitle { color: var(--text-muted); font-size: 13px; margin-bottom: 4px; }
+
+        .now-playing {
+            background: linear-gradient(135deg, rgba(122,132,80,0.18), rgba(217,164,65,0.14));
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin: 16px 0;
+            font-size: 14px;
+            color: var(--brown-warm);
+        }
+        .now-playing strong { color: var(--brown-deep); font-size: 15px; }
+
+        .audio-wrapper { margin: 14px 0; }
+        audio {
+            width: 100%;
+            border-radius: 30px;
+            outline: none;
+            background: var(--cream);
+        }
+        audio::-webkit-media-controls-panel { background: var(--cream); }
+
+        .btn-group {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 12px 0;
+        }
+        .btn {
+            background: var(--olive);
+            color: #fff;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            transition: 0.25s;
+        }
+        .btn:hover { background: var(--olive-d); transform: translateY(-2px); box-shadow: 0 6px 16px rgba(122,132,80,0.35); }
+        .btn:active { transform: scale(0.96); }
+
+        .btn-secondary { background: var(--brown-warm); }
+        .btn-secondary:hover { background: var(--brown-deep); box-shadow: 0 6px 16px rgba(62,44,35,0.35); }
+
+        .btn-success { background: var(--terracotta); }
+        .btn-success:hover { background: var(--terracotta-d); box-shadow: 0 6px 16px rgba(201,106,75,0.35); }
+
+        .btn-warning { background: var(--mustard); color: var(--brown-deep); }
+        .btn-warning:hover { background: var(--mustard-d); box-shadow: 0 6px 16px rgba(217,164,65,0.4); }
+
+        .btn-danger { background: var(--rose); }
+        .btn-danger:hover { background: #b34a4a; box-shadow: 0 6px 16px rgba(200,90,90,0.35); }
+
+        .playlist-section {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+            text-align: left;
+        }
+        .playlist-section h3 {
+            margin: 0 0 10px 0;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--brown-deep);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .playlist-section h3 .count {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: normal;
+        }
+        #playlistContainer {
+            max-height: 220px;
+            overflow-y: auto;
+        }
+        .playlist-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 9px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-bottom: 4px;
+            border: 1px solid transparent;
+        }
+        .playlist-item:hover { background: rgba(122,132,80,0.12); border-color: var(--border); }
+        .playlist-item.active {
+            background: var(--olive);
+            color: #fff;
+            border-color: var(--olive-d);
+        }
+        .playlist-item .song-info { display: flex; flex-direction: column; overflow: hidden; }
+        .playlist-item .song-title {
+            font-weight: 500;
+            font-size: 14px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .playlist-item .song-artist { font-size: 11px; opacity: 0.75; }
+        .playlist-item .play-icon { font-size: 15px; opacity: 0.5; margin-left: 10px; flex-shrink: 0; }
+        .playlist-item.active .play-icon { opacity: 1; }
+        .playlist-item .delete-btn {
+            background: none;
+            border: none;
+            color: var(--rose);
+            cursor: pointer;
+            font-size: 14px;
+            opacity: 0.5;
+            padding: 0 5px;
+            flex-shrink: 0;
+        }
+        .playlist-item.active .delete-btn { color: #fff; opacity: 0.85; }
+        .playlist-item .delete-btn:hover { opacity: 1; }
+
+        .file-input-wrapper {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+        }
+        .file-input-wrapper label {
+            display: inline-block;
+            background: var(--cream);
+            padding: 9px 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            border: 2px dashed var(--olive);
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--brown-warm);
+            transition: 0.3s;
+        }
+        .file-input-wrapper label:hover {
+            background: rgba(122,132,80,0.1);
+            border-style: solid;
+        }
+        .file-input-wrapper input[type="file"] { display: none; }
+        .file-name { margin-top: 8px; font-size: 12px; color: var(--text-muted); }
+
+        .status {
+            margin-top: 14px;
+            font-size: 12.5px;
+            color: var(--brown-warm);
+            padding: 7px 14px;
+            background: rgba(122,132,80,0.14);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+        }
+
+        #playlistContainer::-webkit-scrollbar { width: 5px; }
+        #playlistContainer::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+
+        @media (max-width: 500px) {
+            .player-container { padding: 22px 16px; }
+            .btn-group { flex-direction: column; align-items: center; }
+            .btn { width: 100%; max-width: 220px; }
+            .playlist-item { padding: 7px 10px; }
+            .playlist-item .song-title { font-size: 13px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="player-container">
+    <h1>MidwestTTTTtt EEEMOOOO</h1>
+    <p class="subtitle">Mari bersenang gembira</p>
+
+    <div class="now-playing">
+        🎶 <strong id="nowPlayingTitle">Belum ada lagu</strong>
+        <span id="nowPlayingArtist" style="color:var(--text-muted);"></span>
+    </div>
+
+    <div class="audio-wrapper">
+        <audio id="audioPlayer" controls preload="metadata">
+            <source src="" type="audio/mpeg">
+            Browser Anda tidak mendukung elemen audio.
+        </audio>
+    </div>
+
+    <div class="btn-group">
+        <button class="btn" id="playBtn">▶ Putar</button>
+        <button class="btn btn-secondary" id="pauseBtn">⏸ Jeda</button>
+        <button class="btn btn-success" id="stopBtn">⏹ Stop</button>
+        <button class="btn btn-warning" id="nextBtn">⏭ Berikutnya</button>
+        <button class="btn btn-warning" id="prevBtn">⏮ Sebelumnya</button>
+        <button class="btn btn-danger" id="shuffleBtn">🔀 Acak</button>
+    </div>
+
+    <div class="playlist-section">
+        <h3>
+            📋 Daftar Putar
+            <span class="count" id="playlistCount">0 lagu</span>
+        </h3>
+        <div id="playlistContainer">
+            <!-- Playlist akan diisi oleh JavaScript -->
+        </div>
+    </div>
+
+    <div class="file-input-wrapper">
+        <label for="audioFile">📂 Tambah Lagu dari Komputer</label>
+        <input type="file" id="audioFile" accept="audio/*" multiple>
+        <div class="file-name" id="fileName">Belum ada file ditambahkan</div>
+    </div>
+
+    <div class="status" id="statusDisplay">Status: Siap</div>
+</div>
+
+<script>
+    const playlist = [
+        {
+            title: 'the more i try to trace you forthwith, the less i want to know where to find you',
+            artist: 'eleventwelfth',
+            url: 'mid/trace.mp3'
+        },
+        {
+            title: 'your head as my favourite bookstore',
+            artist: 'eleventwelfth',
+            url: 'mid/your.mp3'
+        },
+        {
+            title: 'another night awake with you on my mind.',
+            artist: 'eleventwelfth',
+            url: 'mid/anot.mp3'
+        },
+        {
+            title: 'every question i withhold, every answer you never told',
+            artist: 'eleventwelfth',
+            url: 'mid/every.mp3'
+        },
+        {
+            title: 'escape me from reality',
+            artist: 'eleventwelfth',
+            url: 'mid/escape.mp3'
+        },
+        {
+            title: 'Never meant',
+            artist: 'american football',
+            url: 'mid/never.mp3'
+        },
+        {
+            title: 'Uncomfortable Numb',
+            artist: 'american football',
+            url: 'mid/uncom.mp3'
+        }
+    ];
+
+    const audio = document.getElementById('audioPlayer');
+    const playBtn = document.getElementById('playBtn');
+    const pauseBtn = document.getElementById('pauseBtn');
+    const stopBtn = document.getElementById('stopBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const prevBtn = document.getElementById('prevBtn');
+    const shuffleBtn = document.getElementById('shuffleBtn');
+    const fileInput = document.getElementById('audioFile');
+    const fileNameDisplay = document.getElementById('fileName');
+    const statusDisplay = document.getElementById('statusDisplay');
+    const playlistContainer = document.getElementById('playlistContainer');
+    const playlistCount = document.getElementById('playlistCount');
+    const nowPlayingTitle = document.getElementById('nowPlayingTitle');
+    const nowPlayingArtist = document.getElementById('nowPlayingArtist');
+
+    let currentIndex = 0;
+    let isUserInteracting = false;
+    let isShuffled = false;
+    let shuffleOrder = [];
+
+    function getPlaylist() {
+        if (isShuffled && shuffleOrder.length === playlist.length) {
+            return shuffleOrder.map(i => playlist[i]);
+        }
+        return playlist;
+    }
+
+    function getCurrentSong() {
+        const list = getPlaylist();
+        return list[currentIndex] || null;
+    }
+
+    function loadSong(index) {
+        const list = getPlaylist();
+        if (index < 0) index = list.length - 1;
+        if (index >= list.length) index = 0;
+        currentIndex = index;
+
+        const song = list[currentIndex];
+        if (!song) return;
+
+        audio.src = song.url;
+        audio.load();
+
+        nowPlayingTitle.textContent = song.title;
+        nowPlayingArtist.textContent = ' - ' + song.artist;
+        updateStatus('Memuat: ' + song.title);
+
+        document.querySelectorAll('.playlist-item').forEach((el, i) => {
+            el.classList.toggle('active', i === currentIndex);
+        });
+
+        if (isUserInteracting) {
+            audio.play().catch(() => {});
+        }
+    }
+
+    function renderPlaylist() {
+        const list = getPlaylist();
+        playlistContainer.innerHTML = '';
+        list.forEach((song, index) => {
+            const item = document.createElement('div');
+            item.className = 'playlist-item' + (index === currentIndex ? ' active' : '');
+            item.innerHTML = `
+                <div class="song-info">
+                    <span class="song-title">${song.title}</span>
+                    <span class="song-artist">${song.artist}</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:6px;">
+                    <span class="play-icon">${index === currentIndex ? '▶️' : '🎵'}</span>
+                    <button class="delete-btn" data-index="${index}" title="Hapus dari playlist">✕</button>
+                </div>
+            `;
+            item.addEventListener('click', (e) => {
+                if (e.target.classList.contains('delete-btn')) return;
+                isUserInteracting = true;
+                loadSong(index);
+                audio.play().catch(() => {});
+            });
+            const deleteBtn = item.querySelector('.delete-btn');
+            deleteBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const idx = parseInt(deleteBtn.dataset.index);
+                removeSong(idx);
+            });
+            playlistContainer.appendChild(item);
+        });
+        playlistCount.textContent = list.length + ' lagu';
+    }
+
+    function removeSong(index) {
+        const list = getPlaylist();
+        if (index < 0 || index >= list.length) return;
+
+        let actualIndex = index;
+        if (isShuffled) {
+            actualIndex = shuffleOrder[index];
+        }
+
+        playlist.splice(actualIndex, 1);
+
+        if (isShuffled) {
+            shuffleOrder = shuffleOrder.filter(i => i !== actualIndex);
+            shuffleOrder = shuffleOrder.map(i => i > actualIndex ? i - 1 : i);
+        }
+
+        if (index === currentIndex) {
+            if (playlist.length > 0) {
+                const newIndex = Math.min(index, playlist.length - 1);
+                loadSong(newIndex);
+            } else {
+                audio.src = '';
+                nowPlayingTitle.textContent = 'Belum ada lagu';
+                nowPlayingArtist.textContent = '';
+                updateStatus('Playlist kosong');
+                currentIndex = 0;
+            }
+        } else if (index < currentIndex) {
+            currentIndex--;
+        }
+
+        renderPlaylist();
+        updateStatus('Lagu dihapus dari playlist');
+    }
+
+    function updateStatus(message) {
+        statusDisplay.textContent = 'Status: ' + message;
+    }
+
+    playBtn.addEventListener('click', function() {
+        isUserInteracting = true;
+        const song = getCurrentSong();
+        if (!song || !audio.src) {
+            if (playlist.length > 0) {
+                loadSong(0);
+            } else {
+                updateStatus('Tidak ada lagu dalam playlist');
+                return;
+            }
+        }
+        audio.play()
+            .then(() => updateStatus('Sedang diputar: ' + (getCurrentSong()?.title || '')))
+            .catch((error) => updateStatus('Gagal memutar: ' + error.message));
+    });
+
+    pauseBtn.addEventListener('click', function() {
+        audio.pause();
+        updateStatus('Dijeda');
+    });
+
+    stopBtn.addEventListener('click', function() {
+        audio.pause();
+        audio.currentTime = 0;
+        updateStatus('Dihentikan');
+    });
+
+    nextBtn.addEventListener('click', function() {
+        if (playlist.length === 0) return;
+        isUserInteracting = true;
+        const list = getPlaylist();
+        loadSong((currentIndex + 1) % list.length);
+        audio.play().catch(() => {});
+    });
+
+    prevBtn.addEventListener('click', function() {
+        if (playlist.length === 0) return;
+        isUserInteracting = true;
+        const list = getPlaylist();
+        loadSong((currentIndex - 1 + list.length) % list.length);
+        audio.play().catch(() => {});
+    });
+
+    shuffleBtn.addEventListener('click', function() {
+        isShuffled = !isShuffled;
+        if (isShuffled) {
+            shuffleOrder = Array.from({length: playlist.length}, (_, i) => i);
+            for (let i = shuffleOrder.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffleOrder[i], shuffleOrder[j]] = [shuffleOrder[j], shuffleOrder[i]];
+            }
+            shuffleBtn.textContent = '🔀 Acak (ON)';
+            shuffleBtn.style.background = 'var(--olive)';
+        } else {
+            shuffleBtn.textContent = '🔀 Acak';
+            shuffleBtn.style.background = 'var(--rose)';
+            shuffleOrder = [];
+        }
+        currentIndex = 0;
+        renderPlaylist();
+        if (playlist.length > 0) {
+            loadSong(0);
+        }
+        updateStatus(isShuffled ? 'Mode acak aktif' : 'Mode acak nonaktif');
+    });
+
+    audio.addEventListener('play', function() {
+        const song = getCurrentSong();
+        updateStatus('Sedang diputar: ' + (song?.title || ''));
+    });
+
+    audio.addEventListener('pause', function() {
+        if (audio.currentTime > 0 && !audio.ended) {
+            updateStatus('Dijeda');
+        }
+    });
+
+    audio.addEventListener('ended', function() {
+        updateStatus('Selesai');
+        if (playlist.length > 0) {
+            isUserInteracting = true;
+            const list = getPlaylist();
+            loadSong((currentIndex + 1) % list.length);
+            audio.play().catch(() => {});
+        }
+    });
+
+    audio.addEventListener('error', function() {
+        let errorMsg = 'Terjadi kesalahan';
+        if (audio.error) {
+            switch (audio.error.code) {
+                case 1: errorMsg = 'Media tidak ditemukan'; break;
+                case 2: errorMsg = 'Format tidak didukung'; break;
+                case 3: errorMsg = 'Terjadi kesalahan saat memuat'; break;
+                case 4: errorMsg = 'Sumber tidak valid'; break;
+            }
+        }
+        updateStatus('Error: ' + errorMsg);
+    });
+
+    fileInput.addEventListener('change', function(event) {
+        const files = event.target.files;
+        if (files.length > 0) {
+            let addedCount = 0;
+            files.forEach(file => {
+                if (file.type.startsWith('audio/')) {
+                    const fileURL = URL.createObjectURL(file);
+                    playlist.push({
+                        title: file.name.replace(/\.[^/.]+$/, ''),
+                        artist: 'File Lokal',
+                        url: fileURL
+                    });
+                    addedCount++;
+                }
+            });
+            fileNameDisplay.textContent = `✅ ${addedCount} file ditambahkan ke playlist`;
+
+            if (isShuffled) {
+                for (let i = 0; i < addedCount; i++) {
+                    shuffleOrder.push(playlist.length - addedCount + i);
+                }
+            }
+
+            renderPlaylist();
+            if (addedCount > 0) {
+                isUserInteracting = true;
+                loadSong(playlist.length - addedCount);
+                audio.play().catch(() => {});
+            }
+        } else {
+            fileNameDisplay.textContent = 'Belum ada file ditambahkan';
+        }
+        fileInput.value = '';
+    });
+
+    renderPlaylist();
+    if (playlist.length > 0) {
+        loadSong(0);
+    }
+    updateStatus('Siap');
+</script>
+
+</body>
+</html>
